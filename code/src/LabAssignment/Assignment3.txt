@@ -1,0 +1,78 @@
+import java.util.*;
+
+class Employee {
+    String empName, empId, address, mailId;
+    long mobileNo;
+    double basicPay;
+
+    Employee(String empName, String empId, String address, String mailId, long mobileNo, double basicPay) {
+        this.empName = empName;
+        this.empId = empId;
+        this.address = address;
+        this.mailId = mailId;
+        this.mobileNo = mobileNo;
+        this.basicPay = basicPay;
+    }
+
+    void generatePaySlip() {
+        double da = 0.97 * basicPay;
+        double hra = 0.10 * basicPay;
+        double pf = 0.12 * basicPay;
+        double staffClubFund = 0.001 * basicPay;
+        double grossSalary = basicPay + da + hra;
+        double netSalary = grossSalary - pf - staffClubFund;
+
+        System.out.println("\n---------- Salary Slip ----------");
+        System.out.println("Employee Name: " + empName);
+        System.out.println("Employee ID: " + empId);
+        System.out.println("Address: " + address);
+        System.out.println("Mail ID: " + mailId);
+        System.out.println("Mobile No: " + mobileNo);
+        System.out.println("Basic Pay: " + basicPay);
+        System.out.println("DA (97%): " + da);
+        System.out.println("HRA (10%): " + hra);
+        System.out.println("PF (12%): " + pf);
+        System.out.println("Staff Club Fund (0.1%): " + staffClubFund);
+        System.out.println("Gross Salary: " + grossSalary);
+        System.out.println("Net Salary: " + netSalary);
+        System.out.println("---------------------------------\n");
+    }
+}
+
+class Programmer extends Employee {
+    Programmer(String empName, String empId, String address, String mailId, long mobileNo, double basicPay) {
+        super(empName, empId, address, mailId, mobileNo, basicPay);
+    }
+}
+
+class TeamLead extends Employee {
+    TeamLead(String empName, String empId, String address, String mailId, long mobileNo, double basicPay) {
+        super(empName, empId, address, mailId, mobileNo, basicPay);
+    }
+}
+
+class AssistantProjectManager extends Employee {
+    AssistantProjectManager(String empName, String empId, String address, String mailId, long mobileNo, double basicPay) {
+        super(empName, empId, address, mailId, mobileNo, basicPay);
+    }
+}
+
+class ProjectManager extends Employee {
+    ProjectManager(String empName, String empId, String address, String mailId, long mobileNo, double basicPay) {
+        super(empName, empId, address, mailId, mobileNo, basicPay);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Programmer p = new Programmer("Rahul", "E101", "Delhi", "rahul@gmail.com", 9876543210L, 50000);
+        TeamLead t = new TeamLead("Neha", "E102", "Mumbai", "neha@gmail.com", 9123456789L, 70000);
+        AssistantProjectManager a = new AssistantProjectManager("Ravi", "E103", "Pune", "ravi@gmail.com", 9988776655L, 90000);
+        ProjectManager m = new ProjectManager("Sneha", "E104", "Bangalore", "sneha@gmail.com", 9876501234L, 120000);
+
+        p.generatePaySlip();
+        t.generatePaySlip();
+        a.generatePaySlip();
+        m.generatePaySlip();
+    }
+}
