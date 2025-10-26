@@ -1,0 +1,47 @@
+import java.util.*;
+
+public class Main {
+
+    public static <T> int countElements(Collection<T> collection, String type) {
+        int count = 0;
+
+        for (T element : collection) {
+            if (type.equalsIgnoreCase("even") && element instanceof Integer && (Integer) element % 2 == 0)
+                count++;
+
+            else if (type.equalsIgnoreCase("odd") && element instanceof Integer && (Integer) element % 2 != 0)
+                count++;
+
+            else if (type.equalsIgnoreCase("prime") && element instanceof Integer && isPrime((Integer) element))
+                count++;
+
+            else if (type.equalsIgnoreCase("palindrome") && isPalindrome(element.toString()))
+                count++;
+        }
+
+        return count;
+    }
+
+    private static boolean isPrime(int n) {
+        if (n <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(n); i++)
+            if (n % i == 0) return false;
+        return true;
+    }
+
+    private static boolean isPalindrome(String str) {
+        String rev = new StringBuilder(str).reverse().toString();
+        return str.equalsIgnoreCase(rev);
+    }
+
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(2, 3, 4, 5, 6, 11, 22, 121, 1331);
+
+        System.out.println("Even numbers count: " + countElements(numbers, "even"));
+        System.out.println("Odd numbers count: " + countElements(numbers, "odd"));
+        System.out.println("Prime numbers count: " + countElements(numbers, "prime"));
+
+        List<String> words = Arrays.asList("level", "hello", "madam", "racecar", "java");
+        System.out.println("Palindrome words count: " + countElements(words, "palindrome"));
+    }
+}
