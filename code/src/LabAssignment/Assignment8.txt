@@ -1,0 +1,188 @@
+import java.io.*;
+import java.util.*;
+
+class Student implements Serializable {
+    String studentId;
+    String name;
+    String rollNo;
+    String studentClass;
+    double marks;
+    String address;
+
+    Student(String studentId, String name, String rollNo, String studentClass, double marks, String address) {
+        this.studentId = studentId;
+        this.name = name;
+        this.rollNo = rollNo;
+        this.studentClass = studentClass;
+        this.marks = marks;
+        this.address = address;
+    }
+
+    public String toString() {
+        return "ID: " + studentId + ", Name: " + name + ", Roll No: " + rollNo + ", Class: " + studentClass +
+                ", Marks: " + marks + ", Address: " + address;
+    }
+}
+
+public class Main {
+    static final String FILE_NAME = "students.dat";
+
+    public static void createDatabase() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter number of students: ");
+            int n = sc.nextInt();
+            sc.nextLine();
+            List<Student> students = new ArrayList<>();
+
+            for (int i = 0; i < n; i++) {
+                System.out.println("\nEnter details for student " + (i + 1));
+                System.out.print("Student ID: ");
+                String id = sc.nextLine();
+                System.out.print("Name: ");
+                String name = sc.nextLine();
+                System.out.print("Roll No: ");
+                String roll = sc.nextLine();
+                System.out.print("Class: ");
+                String cls = sc.nextLine();
+                System.out.print("Marks: ");
+                double marks = sc.nextDouble();
+                sc.nextLine();
+                System.out.print("Address: ");
+                String addr = sc.nextLine();
+
+                students.add(new Student(id, name, roll, cls, marks, addr));
+            }
+
+            oos.writeObject(students);
+            System.out.println("Database created successfully.");
+        } catch (Exception e) {
+            System.out.println("Error creating database: " + e.getMessage());
+        }
+    }
+
+    public static List<Student> readDatabase() {
+        List<Student> students = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            students = (List<Student>) ois.readObject();
+        } catch (Exception e) {
+            System.out.println("No database found or error reading file.");
+        }
+        return students;
+    }
+
+    public static void displayDatabase() {
+        List<Student> students = readDatabase();
+        if (students.isEmpty()) {
+            System.out.println("Database is empty.");
+        } else {
+            System.out.println("\n---- Student Database ----");
+            students.forEach(System.out::println);
+        }
+    }
+
+    public static void searchRecord() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Student ID to search: ");
+        String id = sc.nextLine();
+
+        List<Student> students = readDatabase();
+        boolean found = false;
+
+        for (Student s : students) {
+            if (s.studentId.equals(id)) {
+                System.out.println("Record Found: " + s);
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            System.out.println("Record not found.");
+    }
+
+    public static void deleteRecord() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Student ID to delete: ");
+        String id = sc.nextLine();
+
+        List<Student> students = readDatabase();
+        boolean removed = students.removeIf(s -> s.studentId.equals(id));
+
+        if (removed) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+                oos.writeObject(students);
+                System.out.println("Record deleted successfully.");
+            } catch (Exception e) {
+                System.out.println("Error deleting record.");
+            }
+        } else {
+            System.out.println("Record not found.");
+        }
+    }
+
+    public static void updateRecord() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Student ID to update: ");
+        String id = sc.nextLine();
+
+        List<Student> students = readDatabase();
+        boolean updated = false;
+
+        for (Student s : students) {
+            if (s.studentId.equals(id)) {
+                System.out.print("Enter new name: ");
+                s.name = sc.nextLine();
+                System.out.print("Enter new roll no: ");
+                s.rollNo = sc.nextLine();
+                System.out.print("Enter new class: ");
+                s.studentClass = sc.nextLine();
+                System.out.print("Enter new marks: ");
+                s.marks = sc.nextDouble();
+                sc.nextLine();
+                System.out.print("Enter new address: ");
+                s.address = sc.nextLine();
+                updated = true;
+                break;
+            }
+        }
+
+        if (updated) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+                oos.writeObject(students);
+                System.out.println("Record updated successfully.");
+            } catch (Exception e) {
+                System.out.println("Error updating record.");
+            }
+        } else {
+            System.out.println("Record not found.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.println("\n---- Student Record Database ----");
+            System.out.println("1. Create Database");
+            System.out.println("2. Display Database");
+            System.out.println("3. Search Record");
+            System.out.println("4. Delete Record");
+            System.out.println("5. Update Record");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> createDatabase();
+                case 2 -> displayDatabase();
+                case 3 -> searchRecord();
+                case 4 -> deleteRecord();
+                case 5 -> updateRecord();
+                case 6 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid choice.");
+            }
+        } while (choice != 6);
+        sc.close();
+    }
+}
