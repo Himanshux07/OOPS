@@ -1,0 +1,65 @@
+class Publication {
+    String title;
+    double price;
+    int copies;
+
+    void saleCopy(int qty) {
+        System.out.println("Total sale of " + title + " = " + (qty * price));
+    }
+}
+
+class Book extends Publication {
+    String author;
+    int totalSales = 0;
+
+    void orderCopies(int num) {
+        copies += num;
+    }
+
+    void saleCopy(int qty) {
+        totalSales += qty * price;
+        copies -= qty;
+    }
+
+    void displaySales() {
+        System.out.println("Book: " + title + " | Author: " + author + " | Total Sales: " + totalSales);
+    }
+}
+
+class Magazine extends Publication {
+    int orderQty;
+    String currentIssue;
+
+    void receiveIssue(String issue, int qty) {
+        currentIssue = issue;
+        orderQty = qty;
+        copies += qty;
+    }
+
+    void saleCopy(int qty) {
+        copies -= qty;
+        System.out.println("Magazine: " + title + " | Issue: " + currentIssue + " | Copies sold: " + qty);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Book b1 = new Book();
+        b1.title = "Java Programming";
+        b1.price = 500;
+        b1.copies = 50;
+        b1.author = "James Gosling";
+        b1.orderCopies(20);
+        b1.saleCopy(30);
+        b1.displaySales();
+
+        Magazine m1 = new Magazine();
+        m1.title = "Tech Today";
+        m1.price = 100;
+        m1.receiveIssue("October 2025", 40);
+        m1.saleCopy(25);
+
+        double totalSales = (30 * 500) + (25 * 100);
+        System.out.println("Total Publication Sales = " + totalSales);
+    }
+}
